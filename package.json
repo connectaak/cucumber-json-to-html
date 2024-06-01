@@ -1,0 +1,23 @@
+{
+  "name": "cucumber-to-html",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node E:/FutureX/cucumber-to-html/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+   "bin": {
+    "cucumber-to-html": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "electron": "^30.0.6",
+    "electron-is-dev": "^3.0.1",
+    "html-pdf": "^3.0.1",
+    "inquirer": "^8.2.6"
+  }
+}

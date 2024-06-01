@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        ipcRenderer.invoke('open-file-dialog').then((filePaths) => {
+            if (filePaths && filePaths.length > 0) {
+                console.log(filePaths[0]);
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.send('selected-file', filePaths[0]);
+            }
+            window.close();
+        });
+    </script>
+</body>
+
+</html>
