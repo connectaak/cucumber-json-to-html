@@ -42,7 +42,7 @@
 const path = require("path");
 const { cucumberCustomObject } = require("./utils/cucumberCustomObject");
 const { generateHTMLTable } = require("./utils/generateHTMLTable");
-const { argv, cwd } = require("node:process");
+const { cwd } = require("node:process");
 const fs = require("fs").promises;
 
 const inputFilePath = process.argv[2];
@@ -50,21 +50,28 @@ const outputDirPath = process.argv[3];
 
 const mainFun = async (inputPath, outputPath) => {
   try {
+    // const currentDateTime = getCurrentDateAndTime();
     const absoluteInputPath = path.resolve(cwd(), inputPath);
     const data = await fs.readFile(absoluteInputPath, "utf8");
+
+    const parsedPath = path.parse(absoluteInputPath);
+    const fileName = parsedPath.name;
     const { gridData, counterData } = await cucumberCustomObject(
       JSON.parse(data)
     );
 
     // Generate HTML table
-    const html = generateHTMLTable(gridData, counterData);
+    const html = generateHTMLTable(gridData, counterData, fileName);
 
     // Ensure the output directory exists
     const absoluteOutputDir = path.resolve(cwd(), outputPath);
     await fs.mkdir(absoluteOutputDir, { recursive: true });
 
     // Write HTML to a file
-    const outputFilePath = path.join(absoluteOutputDir, "output.html");
+    const outputFilePath = path.join(
+      absoluteOutputDir,
+      `${fileName}-output.html`
+    );
     await fs.writeFile(outputFilePath, html, "utf8");
 
     // Log the path of the generated HTML file

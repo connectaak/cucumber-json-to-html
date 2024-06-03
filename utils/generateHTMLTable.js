@@ -1,4 +1,6 @@
-exports.generateHTMLTable = (data, counterData) => {
+const { getCurrentDateAndTime } = require("./getCurrentDateAndTime");
+
+exports.generateHTMLTable = (data, counterData, fileName) => {
   const COLORS = {
     Passed: "#8fdc93",
     Failed: "#f29191",
@@ -90,7 +92,7 @@ exports.generateHTMLTable = (data, counterData) => {
       label: "Status",
     },
   ];
-
+  const currentDateTime = getCurrentDateAndTime();
   // Generating Table summary ...........
   let totalStepsPassed = 0;
   let totalStepsFailed = 0;
@@ -177,8 +179,9 @@ table, th, td {
   border-collapse: collapse;
   padding:5px;
 }
-</style> <head><title>Grid Data</title></head><body style='margin: auto;width:950px '>`;
-  html += "<table ><tr>";
+</style> <head><title>Grid Data</title></head><body style='margin:0' >`;
+  html += `<div style='display:flex; justify-content: space-between;align-items:center;background:#FAFAFA; margin:10px;height:100px '><h6 style='font-size:25px;'>${fileName}</h6> <h6 style='font-size:18px;'>${currentDateTime} </h6> </div>`;
+  html += "<table style='margin: auto;width:950px ' ><tr>";
 
   // Initial cell for spacing
   html += `<th bgcolor="${COLORS["Header"]}" style='padding: 5px;border: 1px solid #000000;' ></th>`;
