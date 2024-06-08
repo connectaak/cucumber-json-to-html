@@ -2,11 +2,12 @@
 
 exports.NanosecondsConverter = (nanoseconds) => {
   // Convert nanoseconds to milliseconds
-  const milliseconds = nanoseconds / 1000000;
+  const milliseconds = (nanoseconds / 1000000).toFixed(0);
 
   // Calculate total seconds
-  const totalSeconds = milliseconds / 1000;
+  const totalSeconds = (milliseconds / 1000).toFixed(0);
 
+  const totalMinutes = (totalSeconds / 60).toFixed(2);
   // Calculate hours, minutes, and seconds
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -19,7 +20,9 @@ exports.NanosecondsConverter = (nanoseconds) => {
 
   return {
     totalDuration: `${formattedHours}:${formattedMinutes}:${formattedSeconds}`,
+    totalMilliseconds: milliseconds,
     totalSeconds,
+    totalMinutes,
   };
 };
 exports.getSecondsToDuration = (totalSeconds) => {

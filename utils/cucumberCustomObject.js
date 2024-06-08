@@ -183,7 +183,10 @@ exports.cucumberCustomObject = (jsonData) => {
       scenariosFailed: item.scenariosFailed,
       scenariosTotal: item.scenariosTotal,
       row_duration: NanosecondsConverter(item.featureDuration).totalDuration,
-      duration: NanosecondsConverter(item.featureDuration).totalSeconds,
+      duration_miliseconds: NanosecondsConverter(item.featureDuration)
+        .totalMilliseconds,
+      duration_seconds: NanosecondsConverter(item.featureDuration).totalSeconds,
+      duration_minutes: NanosecondsConverter(item.featureDuration).totalMinutes,
       status: item.featureStatus,
     };
   });

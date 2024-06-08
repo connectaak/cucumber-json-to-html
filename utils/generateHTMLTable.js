@@ -77,14 +77,32 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
       id: "row_duration",
       numeric: true,
       disablePadding: false,
-      label: "Row Duration",
+      label: "Raw Duration",
     },
     {
-      id: "duration",
+      id: "duration_miliseconds",
       numeric: true,
       disablePadding: false,
-      label: "Duration",
+      label: "Duration Miliseconds",
     },
+    {
+      id: "duration_seconds",
+      numeric: true,
+      disablePadding: false,
+      label: "Duration Seconds",
+    },
+    {
+      id: "duration_minutes",
+      numeric: true,
+      disablePadding: false,
+      label: "Duration Minutes",
+    },
+    // {
+    //   id: "duration",
+    //   numeric: true,
+    //   disablePadding: false,
+    //   label: "Duration",
+    // },
     {
       id: "status",
       numeric: true,
@@ -169,8 +187,14 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
     totalFeatures,
   };
   // Use the reduce function to calculate the sum of all durations
-  const totalDuration = data.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.duration;
+  const totalDurationMiliseconds = data.reduce((accumulator, currentValue) => {
+    return accumulator + parseFloat(currentValue.duration_miliseconds);
+  }, 0);
+  const totalDurationSeconds = data.reduce((accumulator, currentValue) => {
+    return accumulator + parseFloat(currentValue.duration_seconds);
+  }, 0);
+  const totalDurationMinutes = data.reduce((accumulator, currentValue) => {
+    return accumulator + parseFloat(currentValue.duration_minutes);
   }, 0);
 
   let html = `<html> <style>
@@ -179,9 +203,9 @@ table, th, td {
   border-collapse: collapse;
   padding:5px;
 }
-</style> <head><title>Grid Data</title></head><body style='margin:0' >`;
-  html += `<div style='display:flex; justify-content: space-between;align-items:center;background:#FAFAFA; margin:10px;height:100px '><h6 style='font-size:25px;'>${fileName}</h6> <h6 style='font-size:18px;'>${currentDateTime} </h6> </div>`;
-  html += "<table style='margin: auto;width:950px ' ><tr>";
+</style> <head><title>Grid Data</title></head><body style='margin:0 50px' >`;
+  html += `<div style='display:flex; justify-content: space-between;align-items:center;background:#FAFAFA; margin-bottom:20px; padding:10px;height:100px '><h6 style='font-size:25px;'>${fileName}</h6> <h6 style='font-size:18px;'>${currentDateTime.formattedDateTime} </h6> </div>`;
+  html += "<table style='margin:auto;width:100% ' ><tr>";
 
   // Initial cell for spacing
   html += `<th bgcolor="${COLORS["Header"]}" style='padding: 5px;border: 1px solid #000000;' ></th>`;
@@ -193,7 +217,7 @@ table, th, td {
   html += `<th  style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="3" align="center">Scenarios</th>`;
 
   // Cells for Features
-  html += `<th style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="3" align="center">Features</th>`;
+  html += `<th style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="5" align="center">Metrics</th>`;
 
   html += "</tr>";
 
@@ -238,7 +262,9 @@ table, th, td {
       row.scenariosTotal !== 0 ? COLORS["Total"] : ""
     }">${row.scenariosTotal}</th>`;
     html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.row_duration}</td>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration}</th>`;
+    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration_miliseconds}</th>`;
+    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration_seconds}</th>`;
+    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration_minutes}</th>`;
     html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
       COLORS[row.status]
     }">${row.status}</th>`;
@@ -258,7 +284,9 @@ table, th, td {
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalScenariosFailed}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalScenariosTotal}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${counterData[3]?.value}</td>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${totalDuration}</th>`;
+  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${totalDurationMiliseconds}</th>`;
+  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${totalDurationSeconds}</th>`;
+  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${totalDurationMinutes}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${totalFeatures}</th>`;
   html += "</tr>";
   // summery

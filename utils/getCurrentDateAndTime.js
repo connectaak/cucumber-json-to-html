@@ -17,9 +17,24 @@ exports.getCurrentDateAndTime = () => {
     day +
     "/" +
     year;
+  const formattedDateForFileName =
+    (month < 10 ? "0" : "") +
+    month +
+    "-" +
+    (day < 10 ? "0" : "") +
+    day +
+    "-" +
+    year;
 
   const formattedTime = `${hours < 10 ? "0" + hours : hours}:${
     minutes < 10 ? "0" + minutes : minutes
   }:${seconds < 10 ? "0" + seconds : seconds}`;
-  return formattedDate + "-" + formattedTime;
+  const formattedTimeForFileName = `${hours < 10 ? "0" + hours : hours}-${
+    minutes < 10 ? "0" + minutes : minutes
+  }-${seconds < 10 ? "0" + seconds : seconds}`;
+  return {
+    formattedDateTime: formattedDate + "-" + formattedTime,
+    formattedDateTimeForFileName:
+      formattedDateForFileName + "-" + formattedTimeForFileName,
+  };
 };
