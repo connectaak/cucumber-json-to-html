@@ -3,7 +3,7 @@ const { NanosecondsConverter } = require("./NanosecondsConverter");
 exports.cucumberCustomObject = (jsonData) => {
   const featuresData = [];
 
-  jsonData?.forEach((feature) => {
+  jsonData?.forEach((report) => {
     let stepPassed = 0;
     let stepFailed = 0;
     let stepSkip = 0;
@@ -14,57 +14,58 @@ exports.cucumberCustomObject = (jsonData) => {
     let featureDuration = 0;
     let featureStatus = "Passed";
 
-    feature.elements?.forEach((element) => {
-      element?.steps?.forEach((step) => {
-        switch (step.result.status) {
-          case "passed":
-            stepPassed++;
-            break;
-          case "failed":
-            stepFailed++;
-            break;
-          case "skipped":
-            stepSkip++;
-            break;
-          case "pending":
-            stepPending++;
-            break;
-          case "undefined":
-            stepUndefined++;
-            break;
+    report?.data?.forEach((feature) => {
+      feature?.elements?.forEach((element) => {
+        element?.steps?.forEach((step) => {
+          switch (step.result.status) {
+            case "passed":
+              stepPassed++;
+              break;
+            case "failed":
+              stepFailed++;
+              break;
+            case "skipped":
+              stepSkip++;
+              break;
+            case "pending":
+              stepPending++;
+              break;
+            case "undefined":
+              stepUndefined++;
+              break;
+          }
+        });
+
+        if (element.steps.every((step) => step.result.status === "passed")) {
+          scenariosPassed++;
+        } else {
+          scenariosFailed++;
+          featureStatus = "Failed";
         }
       });
-
-      if (element.steps.every((step) => step.result.status === "passed")) {
-        scenariosPassed++;
-      } else {
-        scenariosFailed++;
-        featureStatus = "Failed";
-      }
-    });
-
-    feature?.elements?.forEach((scenario) => {
-      scenario?.steps?.forEach((step) => {
-        featureDuration += step?.result?.duration || 0; // add duration to feature duration
+      feature?.elements?.forEach((scenario) => {
+        scenario?.steps?.forEach((step) => {
+          featureDuration += step?.result?.duration || 0; // add duration to feature duration
+        });
       });
-    });
-    // eslint-disable-next-line no-unused-expressions
-    featureDuration;
-
-    featuresData.push({
-      feature: feature.name,
-      stepPassed: stepPassed,
-      stepFailed: stepFailed,
-      stepSkip: stepSkip,
-      stepPending: stepPending,
-      stepUndefined: stepUndefined,
-      stepTotal:
-        stepPassed + stepFailed + stepSkip + stepPending + stepUndefined,
-      scenariosPassed: scenariosPassed,
-      scenariosFailed: scenariosFailed,
-      scenariosTotal: scenariosPassed + scenariosFailed,
-      featureDuration: featureDuration.toFixed(0),
-      featureStatus: featureStatus,
+      // eslint-disable-next-line no-unused-expressions
+      featureDuration;
+      featuresData.push({
+        reportName: report.name,
+        feature: feature.name,
+        stepPassed: stepPassed,
+        stepFailed: stepFailed,
+        stepSkip: stepSkip,
+        stepPending: stepPending,
+        stepUndefined: stepUndefined,
+        stepTotal:
+          stepPassed + stepFailed + stepSkip + stepPending + stepUndefined,
+        scenariosPassed: scenariosPassed,
+        scenariosFailed: scenariosFailed,
+        scenariosTotal: scenariosPassed + scenariosFailed,
+        featureDuration: featureDuration.toFixed(0),
+        featureStatus: featureStatus,
+      });
     });
   });
 
@@ -93,86 +94,11 @@ exports.cucumberCustomObject = (jsonData) => {
     },
   ];
 
-  const chartData = [
-    {
-      title: "Features",
-      data: [
-        {
-          name: "failed",
-          value: featuresData.filter((item) => item.featureStatus === "Failed")
-            .length,
-        },
-        {
-          name: "passed",
-          value: featuresData.filter((item) => item.featureStatus === "Passed")
-            .length,
-        },
-      ],
-    },
-
-    {
-      title: "Scenarios",
-
-      data: [
-        {
-          name: "failed",
-          value: featuresData.reduce(
-            (total, item) => total + item.scenariosFailed,
-            0
-          ),
-        },
-        {
-          name: "passed",
-          value: featuresData.reduce(
-            (total, item) => total + item.scenariosPassed,
-            0
-          ),
-        },
-      ],
-    },
-
-    {
-      title: "Steps",
-      data: [
-        {
-          name: "failed",
-          value: featuresData.reduce(
-            (total, item) => total + item.stepFailed,
-            0
-          ),
-        },
-        {
-          name: "passed",
-          value: featuresData.reduce(
-            (total, item) => total + item.stepPassed,
-            0
-          ),
-        },
-        {
-          name: "skipped",
-          value: featuresData.reduce((total, item) => total + item.stepSkip, 0),
-        },
-        {
-          name: "pending",
-          value: featuresData.reduce(
-            (total, item) => total + item.stepPending,
-            0
-          ),
-        },
-        {
-          name: "undefined",
-          value: featuresData.reduce(
-            (total, item) => total + item.stepUndefined,
-            0
-          ),
-        },
-      ],
-    },
-  ];
-
-  const gridData = featuresData.map((item) => {
+  const gridData = featuresData.map((item, index) => {
     return {
+      id: index + 1,
       name: item.feature,
+      reportName: item.reportName,
       stepsPassed: item.stepPassed,
       stepsFailed: item.stepFailed,
       stepsSkipped: item.stepSkip,
@@ -191,5 +117,5 @@ exports.cucumberCustomObject = (jsonData) => {
     };
   });
 
-  return { featuresData, chartData, counterData, gridData };
+  return { counterData, gridData };
 };

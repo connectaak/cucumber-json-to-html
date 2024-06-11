@@ -14,6 +14,18 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
   // Head Cells.........
   const headCells = [
     {
+      id: "SN",
+      numeric: false,
+      disablePadding: true,
+      label: "S.NO",
+    },
+    {
+      id: "reportName",
+      numeric: false,
+      disablePadding: true,
+      label: "Report Name",
+    },
+    {
       id: "name",
       numeric: false,
       disablePadding: true,
@@ -204,7 +216,7 @@ table, th, td {
   padding:5px;
 }
 </style> <head><title>Grid Data</title></head><body style='margin:0 50px' >`;
-  html += `<div style='display:flex; justify-content: space-between;align-items:center;background:#FAFAFA; margin-bottom:20px; padding:10px;height:100px '><h6 style='font-size:25px;'>${fileName}</h6> <h6 style='font-size:18px;'>${currentDateTime.formattedDateTime} </h6> </div>`;
+  // html += `<div style='display:flex; justify-content: space-between;align-items:center;background:#FAFAFA; margin-bottom:20px; padding:10px;height:100px '><h6 style='font-size:25px;'>${fileName}</h6> <h6 style='font-size:18px;'>${currentDateTime.formattedDateTime} </h6> </div>`;
   html += "<table style='margin:auto;width:100% ' ><tr>";
 
   // Initial cell for spacing
@@ -217,7 +229,7 @@ table, th, td {
   html += `<th  style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="3" align="center">Scenarios</th>`;
 
   // Cells for Features
-  html += `<th style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="5" align="center">Metrics</th>`;
+  html += `<th style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="7" align="center">Metrics</th>`;
 
   html += "</tr>";
 
@@ -233,6 +245,8 @@ table, th, td {
   // Table Body
   data.forEach((row) => {
     html += "<tr>";
+    html += `<th style='padding: 5px;border: 1px solid #000000;'>${row.id}</th>`;
+    html += `<th style='padding: 5px;border: 1px solid #000000;'>${row.reportName}</th>`;
     html += `<th style='padding: 5px;border: 1px solid #000000;'>${row.name}</th>`;
     html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
       row.stepsPassed !== 0 ? COLORS["Passed"] : ""
@@ -273,7 +287,7 @@ table, th, td {
 
   // summery
   html += "<tr>";
-  html += `<th rowspan="10" style='padding: 5px 0;border: 1px solid #000000;'>summery</th>`;
+  html += `<th rowspan="5" colspan="3" style='padding: 5px 0;border: 1px solid #000000;'>summery</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalStepsPassed}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${gridSummary.totalStepsFailed}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalStepsSkipped}</th>`;
@@ -288,6 +302,7 @@ table, th, td {
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${totalDurationSeconds}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${totalDurationMinutes}</th>`;
   html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${totalFeatures}</th>`;
+  // html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" ></th>`;
   html += "</tr>";
   // summery
   html += "<tr>";
