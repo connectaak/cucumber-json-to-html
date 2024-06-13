@@ -15,7 +15,7 @@ const processJSONToHtml = async (data, outputPath, outputFileName) => {
     const { gridData, counterData } = await cucumberCustomObject(data);
 
     // Generate HTML table
-    const html = generateHTMLTable(gridData, counterData);
+    const html = generateHTMLTable(gridData, counterData, outputFileName);
     const currentDateTime = getCurrentDateAndTime();
     // Ensure the output directory exists
     const absoluteOutputDir = path.resolve(cwd(), outputPath);
