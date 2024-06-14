@@ -1,5 +1,5 @@
 const { getCurrentDateAndTime } = require("./getCurrentDateAndTime");
-
+// const image = require("");
 exports.generateHTMLTable = (data, counterData, fileName) => {
   const COLORS = {
     Passed: "#8fdc93",
@@ -109,12 +109,7 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
       disablePadding: false,
       label: "Duration Minutes",
     },
-    // {
-    //   id: "duration",
-    //   numeric: true,
-    //   disablePadding: false,
-    //   label: "Duration",
-    // },
+
     {
       id: "status",
       numeric: true,
@@ -209,7 +204,11 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
     return accumulator + parseFloat(currentValue.duration_minutes);
   }, 0);
 
-  let html = `<html> <style>
+  let html = `<html><head> <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
   table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
@@ -254,14 +253,18 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
     
   }
     .headerStyle{
-   background-color: #fcd73c;
+    background-color: #fcd73c;
     display:flex;
     justify-content: space-between;
     align-items:center;
     margin-bottom:20px;
     padding:10px;
-    height:50px;
+    height:80px;
     color:#000000 !important;
+    }
+    img{
+    widht:50px;
+    height:50px;
     }
 </style>
  <script>
@@ -269,114 +272,110 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
     const body = document.body;
     body.classList.toggle('dark-mode');
     body.classList.toggle('light-mode');
-    const mode = body.classList.contains('dark-mode') ? 'Light' : 'Dark';
-    document.getElementById('mode-button').innerText = mode + ' Mode';
+    // const mode = body.classList.contains('dark-mode') ? 'Light' : 'Dark';
+    // document.getElementById('mode-button').innerText = mode + ' Mode';
   }
 </script>
-<head><title>Grid Data</title></head><body style='margin:0' >`;
+</head><body style='margin:0' >`;
   html += `<div class='headerStyle'><h6 style='font-size:25px;'>${
     fileName ? fileName : "Cucumber Report"
   }  </h6> <div style='display:flex;align-items:center;'> <h6 style='margin-right:50px;font-size:18px;' >V1 </h6> <h6 style='font-size:18px;'>
  Date and Time:
   ${
     currentDateTime.formattedDateTime
-  } </h6> <button id="mode-button" class="toggle-btn"  onclick="toggleMode()">Dark Mode</button></div>   </div> <section style='margin:50px'>`;
+  } </h6> <button id="mode-button" class="toggle-btn"  onclick="toggleMode()"> <img src="https://cdn-icons-png.flaticon.com/512/8295/8295070.png" alt="day and night mode" /></button></div>   </div> <section style='margin:50px'>`;
   html += "<table style='margin:auto;width:100%;' ><tr>";
 
   // Initial cell for spacing
-  html += `<th bgcolor="${COLORS["Header"]}" style='padding: 5px;border: 1px solid #000000;' ></th>`;
+  html += `<th bgcolor="${COLORS["Header"]}" ></th>`;
 
   // Cells for Steps
-  html += `<th  style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}"  colspan="6" align="center">Steps</th>`;
+  html += `<th  bgcolor="${COLORS["Header"]}"  colspan="6">Steps</th>`;
 
   // Cells for Scenarios
-  html += `<th  style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="3" align="center">Scenarios</th>`;
+  html += `<th  bgcolor="${COLORS["Header"]}"  colspan="3">Scenarios</th>`;
 
   // Cells for Features
-  html += `<th style='padding: 5px;border: 1px solid #000000;' bgcolor="${COLORS["Header"]}" class="border" colspan="7" align="center">Metrics</th>`;
+  html += `<th  bgcolor="${COLORS["Header"]}"  colspan="7" >Metrics</th>`;
 
   html += "</tr>";
 
   // Table Head
   html += "<tr>";
   headCells.forEach((headCell) => {
-    html += `<th  style='padding: 5px;border: 1px solid #000000;' align="center" class="border" bgcolor="${
-      COLORS[headCell.label]
-    }">${headCell.label}</th>`;
+    html += `<th  bgcolor="${COLORS[headCell.label]}">${headCell.label}</th>`;
   });
   html += "</tr>";
 
   // Table Body
   data.forEach((row) => {
     html += "<tr>";
-    html += `<th style='padding: 5px;border: 1px solid #000000;'>${row.id}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;'>${row.reportName}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;'>${row.name}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
-      row.stepsPassed !== 0 ? COLORS["Passed"] : ""
-    }">${row.stepsPassed}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
-      row.stepsFailed !== 0 ? COLORS["Failed"] : ""
-    }">${row.stepsFailed}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+    html += `<th >${row.id}</th>`;
+    html += `<th >${row.reportName}</th>`;
+    html += `<th >${row.name}</th>`;
+    html += `<th  bgcolor="${row.stepsPassed !== 0 ? COLORS["Passed"] : ""}">${
+      row.stepsPassed
+    }</th>`;
+    html += `<th  bgcolor="${row.stepsFailed !== 0 ? COLORS["Failed"] : ""}">${
+      row.stepsFailed
+    }</th>`;
+    html += `<th  bgcolor="${
       row.stepsSkipped !== 0 ? COLORS["Skipped"] : ""
     }">${row.stepsSkipped}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+    html += `<th  bgcolor="${
       row.stepsUndefined !== 0 ? COLORS["Undefined"] : ""
     }">${row.stepsUndefined}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+    html += `<th  bgcolor="${
       row.stepsPending !== 0 ? COLORS["Pending"] : ""
     }">${row.stepsPending}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
-      row.stepsTotal !== 0 ? COLORS["Total"] : ""
-    }">${row.stepsTotal}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+    html += `<th  bgcolor="${row.stepsTotal !== 0 ? COLORS["Total"] : ""}">${
+      row.stepsTotal
+    }</th>`;
+    html += `<th  bgcolor="${
       row.scenariosPassed !== 0 ? COLORS["Passed"] : ""
     }">${row.scenariosPassed}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+    html += `<th  bgcolor="${
       row.scenariosFailed !== 0 ? COLORS["Failed"] : ""
     }">${row.scenariosFailed}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+    html += `<th  bgcolor="${
       row.scenariosTotal !== 0 ? COLORS["Total"] : ""
     }">${row.scenariosTotal}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.row_duration}</td>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration_miliseconds}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration_seconds}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center">${row.duration_minutes}</th>`;
-    html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
-      COLORS[row.status]
-    }">${row.status}</th>`;
+    html += `<th >${row.row_duration}</td>`;
+    html += `<th >${row.duration_miliseconds}</th>`;
+    html += `<th >${row.duration_seconds}</th>`;
+    html += `<th >${row.duration_minutes}</th>`;
+    html += `<th  bgcolor="${COLORS[row.status]}">${row.status}</th>`;
     html += "</tr>";
   });
 
   // summery
   html += "<tr>";
-  html += `<th rowspan="5" colspan="3" style='padding: 5px 0;border: 1px solid #000000;'>summery</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalStepsPassed}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center">${gridSummary.totalStepsFailed}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalStepsSkipped}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalStepsUndefined}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalStepsPending}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" rowspan="5" >${gridSummary.totalStepsTotal}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalScenariosPassed}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummary.totalScenariosFailed}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" rowspan="4">${gridSummary.totalScenariosTotal}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center"  rowspan="4">${counterData[3]?.value}</td>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center"  rowspan="4">${totalDurationMiliseconds}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center"  rowspan="4">${totalDurationSeconds}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center"  rowspan="4">${totalDurationMinutes}</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center"  rowspan="4">${totalFeatures}</th>`;
+  html += `<th rowspan="5" colspan="3" '>summery</th>`;
+  html += `<th  >${gridSummary.totalStepsPassed}</th>`;
+  html += `<th >${gridSummary.totalStepsFailed}</th>`;
+  html += `<th  >${gridSummary.totalStepsSkipped}</th>`;
+  html += `<th  >${gridSummary.totalStepsUndefined}</th>`;
+  html += `<th  >${gridSummary.totalStepsPending}</th>`;
+  html += `<th  rowspan="5" >${gridSummary.totalStepsTotal}</th>`;
+  html += `<th  >${gridSummary.totalScenariosPassed}</th>`;
+  html += `<th  >${gridSummary.totalScenariosFailed}</th>`;
+  html += `<th  rowspan="4">${gridSummary.totalScenariosTotal}</th>`;
+  html += `<th   rowspan="4">${counterData[3]?.value}</td>`;
+  html += `<th   rowspan="4">${totalDurationMiliseconds}</th>`;
+  html += `<th   rowspan="4">${totalDurationSeconds}</th>`;
+  html += `<th   rowspan="4">${totalDurationMinutes}</th>`;
+  html += `<th   rowspan="4">${totalFeatures}</th>`;
 
   html += "</tr>";
   // summery
   html += "<tr>";
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;margin:0;' align="center" >${gridSummaryPercentage.totalStepsPassedPercent}%</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;margin:0;' align="center">${gridSummaryPercentage.totalStepsFailedPercent}%</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;margin:0;' align="center" >${gridSummaryPercentage.totalStepsSkippedPercent}%</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;' align="center" >${gridSummaryPercentage.totalStepsUndefinedPercent}%</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;margin:0;' align="center" >${gridSummaryPercentage.totalStepsPendingPercent}%</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;margin:0;' align="center" >${gridSummaryPercentage.totalScenariosPassedPercent}%</th>`;
-  html += `<th style='padding: 5px 0;border: 1px solid #000000;margin:0;' align="center" >${gridSummaryPercentage.totalScenariosFailedPercent}%</th>`;
+  html += `<th  >${gridSummaryPercentage.totalStepsPassedPercent}%</th>`;
+  html += `<th >${gridSummaryPercentage.totalStepsFailedPercent}%</th>`;
+  html += `<th  >${gridSummaryPercentage.totalStepsSkippedPercent}%</th>`;
+  html += `<th ' >${gridSummaryPercentage.totalStepsUndefinedPercent}%</th>`;
+  html += `<th  >${gridSummaryPercentage.totalStepsPendingPercent}%</th>`;
+  html += `<th  >${gridSummaryPercentage.totalScenariosPassedPercent}%</th>`;
+  html += `<th  >${gridSummaryPercentage.totalScenariosFailedPercent}%</th>`;
   html += "</tr>";
 
   html += "</table></section> </body></html>";
@@ -626,21 +625,21 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
 //         <tr>
 //           <th bgcolor="${
 //             COLORS["Header"]
-//           }" style='padding: 5px;border: 1px solid #000000;'></th>
-//           <th style='padding: 5px;border: 1px solid #000000;' bgcolor="${
+//           }" ></th>
+//           <th  bgcolor="${
 //             COLORS["Header"]
-//           }" colspan="6" align="center">Steps</th>
-//           <th style='padding: 5px;border: 1px solid #000000;' bgcolor="${
+//           }" colspan="6">Steps</th>
+//           <th  bgcolor="${
 //             COLORS["Header"]
-//           }" colspan="3" align="center">Scenarios</th>
-//           <th style='padding: 5px;border: 1px solid #000000;' bgcolor="${
+//           }" colspan="3">Scenarios</th>
+//           <th  bgcolor="${
 //             COLORS["Header"]
-//           }" colspan="7" align="center">Metrics</th>
+//           }" colspan="7">Metrics</th>
 //         </tr>
 //         <tr>`;
 
 //   headCells.forEach((headCell) => {
-//     html += `<th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//     html += `<th  bgcolor="${
 //       COLORS[headCell.label]
 //     }">${headCell.label}</th>`;
 //   });
@@ -649,49 +648,49 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
 
 //   data.forEach((row) => {
 //     html += `<tr>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${row.id}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${row.reportName}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${row.name}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th >${row.id}</th>
+//       <th >${row.reportName}</th>
+//       <th >${row.name}</th>
+//       <th  bgcolor="${
 //         row.stepsPassed !== 0 ? COLORS["Passed"] : ""
 //       }">${row.stepsPassed}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.stepsFailed !== 0 ? COLORS["Failed"] : ""
 //       }">${row.stepsFailed}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.stepsSkipped !== 0 ? COLORS["Skipped"] : ""
 //       }">${row.stepsSkipped}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.stepsUndefined !== 0 ? COLORS["Undefined"] : ""
 //       }">${row.stepsUndefined}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.stepsPending !== 0 ? COLORS["Pending"] : ""
 //       }">${row.stepsPending}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.stepsTotal !== 0 ? COLORS["Total"] : ""
 //       }">${row.stepsTotal}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.scenariosPassed !== 0 ? COLORS["Passed"] : ""
 //       }">${row.scenariosPassed}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.scenariosFailed !== 0 ? COLORS["Failed"] : ""
 //       }">${row.scenariosFailed}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.scenariosTotal !== 0 ? COLORS["Total"] : ""
 //       }">${row.scenariosTotal}</th>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${
+//       <th >${
 //         row.row_duration
 //       }</th>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${
+//       <th >${
 //         row.duration_miliseconds
 //       }</th>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${
+//       <th >${
 //         row.duration_seconds
 //       }</th>
-//       <th style='padding: 5px;border: 1px solid #000000;'>${
+//       <th >${
 //         row.duration_minutes
 //       }</th>
-//       <th style='padding: 5px;border: 1px solid #000000;' align="center" bgcolor="${
+//       <th  bgcolor="${
 //         row.status === "Passed" ? COLORS["Passed"] : COLORS["Failed"]
 //       }">${row.status}</th>
 //     </tr>`;
