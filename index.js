@@ -1,22 +1,52 @@
 #!/usr/bin/env node
 const path = require("path");
 const { cucumberCustomObject } = require("./utils/cucumberCustomObject");
-const { generateHTMLTable } = require("./utils/generateHTMLTable");
 const { cwd } = require("node:process");
 const { getCurrentDateAndTime } = require("./utils/getCurrentDateAndTime");
+const {
+  generateHTMLTableAdvance,
+} = require("./utils/generateHTMLTableAdvance");
+const { generateHTMLTableBasic } = require("./utils/generateHTMLTableBasic");
 const fs = require("fs").promises;
 
 const inputFilePath = process.argv[2];
 const outputDirPath = process.argv[3];
-const outputFileName = process.argv[4];
+// const outputFileName = process.argv[4];
+const outputFileNameOrTableMode = process.argv[4];
+const outputFileName = process.argv[5];
 
-const processJSONToHtml = async (data, outputPath, outputFileName) => {
+const processJSONToHtml = async (data, outputPath) => {
   try {
-    const { gridData, counterData } = await cucumberCustomObject(data);
-
-    // Generate HTML table
-    const html = generateHTMLTable(gridData, counterData, outputFileName);
     const currentDateTime = getCurrentDateAndTime();
+    const { gridData, counterData } = await cucumberCustomObject(data);
+    let html;
+    let outputHtmlFileName;
+    if (
+      outputFileNameOrTableMode &&
+      outputFileNameOrTableMode == "advance" &&
+      outputFileName
+    ) {
+      // Generate HTML table
+      html = generateHTMLTableAdvance(gridData, counterData, outputFileName);
+      outputHtmlFileName = outputFileName;
+    } else if (
+      outputFileNameOrTableMode &&
+      outputFileNameOrTableMode == "advance"
+    ) {
+      html = generateHTMLTableAdvance(gridData, counterData);
+      outputHtmlFileName = currentDateTime.formattedDateTimeForFileName;
+    } else if (outputFileNameOrTableMode) {
+      html = generateHTMLTableBasic(
+        gridData,
+        counterData,
+        outputFileNameOrTableMode
+      );
+      outputHtmlFileName = outputFileNameOrTableMode;
+    } else {
+      html = generateHTMLTableBasic(gridData, counterData);
+      outputHtmlFileName = currentDateTime.formattedDateTimeForFileName;
+    }
+
     // Ensure the output directory exists
     const absoluteOutputDir = path.resolve(cwd(), outputPath);
     await fs.mkdir(absoluteOutputDir, { recursive: true });
@@ -24,9 +54,8 @@ const processJSONToHtml = async (data, outputPath, outputFileName) => {
     // Write HTML to a file
     const outputFilePath = path.join(
       absoluteOutputDir,
-      outputFileName
-        ? `${outputFileName}.html`
-        : `${currentDateTime.formattedDateTimeForFileName}.html`
+
+      `${outputHtmlFileName}.html`
     );
     await fs.writeFile(outputFilePath, html, "utf8");
 

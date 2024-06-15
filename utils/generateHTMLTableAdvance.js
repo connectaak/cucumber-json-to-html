@@ -1,6 +1,6 @@
 const { getCurrentDateAndTime } = require("./getCurrentDateAndTime");
 // const image = require("");
-exports.generateHTMLTable = (data, counterData, fileName) => {
+exports.generateHTMLTableAdvance = (data, counterData, fileName) => {
   const COLORS = {
     Passed: "#8fdc93",
     Failed: "#f29191",
@@ -279,7 +279,7 @@ exports.generateHTMLTable = (data, counterData, fileName) => {
 </head><body style='margin:0' >`;
   html += `<div class='headerStyle'><h6 style='font-size:25px;'>${
     fileName ? fileName : "Cucumber Report"
-  }  </h6> <div style='display:flex;align-items:center;'> <h6 style='margin-right:50px;font-size:18px;' >V1 </h6> <h6 style='font-size:18px;'>
+  }  </h6> <div style='display:flex;align-items:center;'> <h6 style='margin-right:50px;font-size:18px;' >V1.1 </h6> <h6 style='font-size:18px;'>
  Date and Time:
   ${
     currentDateTime.formattedDateTime
