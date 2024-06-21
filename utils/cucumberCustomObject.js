@@ -1,4 +1,4 @@
-const { NanosecondsConverter } = require("./NanosecondsConverter");
+const { DurationConverter } = require("./DurationConverter");
 
 exports.cucumberCustomObject = (jsonData) => {
   const featuresData = [];
@@ -90,7 +90,7 @@ exports.cucumberCustomObject = (jsonData) => {
     { title: "Test/Steps", value: totalSteps },
     {
       title: "Duration",
-      value: NanosecondsConverter(totalDuration).totalDuration,
+      value: DurationConverter(totalDuration).totalDuration,
     },
   ];
 
@@ -108,11 +108,11 @@ exports.cucumberCustomObject = (jsonData) => {
       scenariosPassed: item.scenariosPassed,
       scenariosFailed: item.scenariosFailed,
       scenariosTotal: item.scenariosTotal,
-      row_duration: NanosecondsConverter(item.featureDuration).totalDuration,
-      duration_miliseconds: NanosecondsConverter(item.featureDuration)
+      row_duration: DurationConverter(item.featureDuration).totalDuration,
+      duration_miliseconds: DurationConverter(item.featureDuration)
         .totalMilliseconds,
-      duration_seconds: NanosecondsConverter(item.featureDuration).totalSeconds,
-      duration_minutes: NanosecondsConverter(item.featureDuration).totalMinutes,
+      duration_seconds: DurationConverter(item.featureDuration).totalSeconds,
+      duration_minutes: DurationConverter(item.featureDuration).totalMinutes,
       status: item.featureStatus,
     };
   });
